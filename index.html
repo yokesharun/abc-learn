@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>ABC & 123 Fun!</title>
+<style>
+  :root {
+    --bg1: #ffd9ec;
+    --card: #ffffff;
+    --shadow: rgba(0,0,0,0.15);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    font-family: "Comic Sans MS", "Baloo 2", "Trebuchet MS", sans-serif;
+    background: linear-gradient(135deg, #ffe29f, #ffa99f, #ff719a, #a18cd1);
+    background-size: 400% 400%;
+    animation: bgmove 18s ease infinite;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    user-select: none;
+    touch-action: manipulation;
+  }
+  @keyframes bgmove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* Top bar */
+  .topbar {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .tab {
+    border: none;
+    border-radius: 40px;
+    padding: 12px 26px;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #fff;
+    box-shadow: 0 4px 0 var(--shadow);
+    transition: transform .1s;
+  }
+  .tab:active { transform: translateY(3px); }
+  .tab.letters { background: #ff6b9d; }
+  .tab.numbers { background: #4ecdc4; }
+  .tab.auto { background: #ffa726; }
+  .tab.auto.on { background: #66bb6a; }
+  .tab.dim { opacity: .55; }
+
+  /* Card area */
+  .stage {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    min-height: 0;
+  }
+  .card {
+    background: var(--card);
+    border-radius: 36px;
+    box-shadow: 0 12px 30px var(--shadow);
+    padding: 18px 28px;
+    text-align: center;
+    width: min(92vw, 560px);
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    animation: pop .35s ease;
+  }
+  @keyframes pop {
+    0% { transform: scale(.6); opacity: 0; }
+    70% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .big {
+    font-size: clamp(3rem, 16vw, 9rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 4px;
+  }
+  .lettersrow .cap { color: #ff5277; }
+  .lettersrow .low { color: #3aafa9; }
+  .emoji {
+    font-size: clamp(4rem, 24vw, 11rem);
+    line-height: 1;
+    margin: 6px 0;
+    animation: bounce 1.4s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  .word {
+    font-size: clamp(1.6rem, 8vw, 3rem);
+    font-weight: 800;
+    color: #6a4cff;
+  }
+  .word b { color: #ff5277; }
+
+  /* Nav buttons */
+  .nav {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+    padding: 14px;
+  }
+  .navbtn {
+    border: none;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    font-size: 2rem;
+    color: #fff;
+    background: #7c4dff;
+    cursor: pointer;
+    box-shadow: 0 5px 0 var(--shadow);
+    transition: transform .1s;
+  }
+  .navbtn:active { transform: translateY(3px); }
+  .navbtn.say { background: #ff7043; width: 90px; border-radius: 45px; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <button class="tab letters" id="tabLetters">🔤 ABC</button>
+    <button class="tab numbers dim" id="tabNumbers">🔢 123</button>
+    <button class="tab auto" id="tabAuto">▶️ Auto</button>
+  </div>
+
+  <div class="stage">
+    <div class="card" id="card" onclick="speakCurrent()"></div>
+  </div>
+
+  <div class="nav">
+    <button class="navbtn" onclick="prev()">⬅️</button>
+    <button class="navbtn say" onclick="speakCurrent()">🔊</button>
+    <button class="navbtn" onclick="next()">➡️</button>
+  </div>
+
+<script>
+const letters = [
+  ["A","Apple","🍎"],["B","Ball","⚽"],["C","Cat","🐱"],["D","Dog","🐶"],
+  ["E","Elephant","🐘"],["F","Fish","🐟"],["G","Grapes","🍇"],["H","Hat","🎩"],
+  ["I","Ice cream","🍦"],["J","Juice","🧃"],["K","Kite","🪁"],["L","Lion","🦁"],
+  ["M","Monkey","🐵"],["N","Nest","🪺"],["O","Orange","🍊"],["P","Pig","🐷"],
+  ["Q","Queen","👸"],["R","Rabbit","🐰"],["S","Sun","☀️"],["T","Tiger","🐯"],
+  ["U","Umbrella","☂️"],["V","Van","🚐"],["W","Watermelon","🍉"],["X","Xylophone","🎼"],
+  ["Y","Yak","🐃"],["Z","Zebra","🦓"]
+];
+const numbers = [
+  ["1","One","🍎"],["2","Two","🍎🍎"],["3","Three","⭐⭐⭐"],["4","Four","🐠🐠🐠🐠"],
+  ["5","Five","🌸🌸🌸🌸🌸"],["6","Six","🚗🚗🚗🚗🚗🚗"],["7","Seven","🎈🎈🎈🎈🎈🎈🎈"],
+  ["8","Eight","🍓🍓🍓🍓🍓🍓🍓🍓"],["9","Nine","🐝🐝🐝🐝🐝🐝🐝🐝🐝"],["10","Ten","🦋🦋🦋🦋🦋🦋🦋🦋🦋🦋"],
+  ["11","Eleven","🍇"],["12","Twelve","🍊"],["13","Thirteen","🍓"],["14","Fourteen","🐞"],
+  ["15","Fifteen","⭐"],["16","Sixteen","🌷"],["17","Seventeen","🐠"],["18","Eighteen","🎈"],
+  ["19","Nineteen","🍎"],["20","Twenty","🦋"]
+];
+
+let mode = "letters";
+let idx = 0;
+let auto = false;
+let timer = null;
+
+function data(){ return mode === "letters" ? letters : numbers; }
+
+function render(){
+  const card = document.getElementById("card");
+  const item = data()[idx];
+  if(mode === "letters"){
+    const [cap, word, emoji] = item;
+    const low = cap.toLowerCase();
+    card.className = "card lettersrow";
+    card.innerHTML =
+      `<div class="big"><span class="cap">${cap}</span> <span class="low">${low}</span></div>
+       <div class="emoji">${emoji}</div>
+       <div class="word"><b>${cap}</b>${word.slice(1)}</div>`;
+  } else {
+    const [num, word, emoji] = item;
+    card.className = "card";
+    card.innerHTML =
+      `<div class="big" style="color:#ff8f00">${num}</div>
+       <div class="emoji" style="font-size:clamp(2.5rem,14vw,6rem)">${emoji}</div>
+       <div class="word">${word}</div>`;
+  }
+  // restart pop animation
+  card.style.animation = "none"; void card.offsetWidth; card.style.animation = "";
+  speakCurrent();
+}
+
+function speakCurrent(){
+  if(!("speechSynthesis" in window)) return;
+  const item = data()[idx];
+  let text;
+  if(mode === "letters") text = `${item[0]}. ${item[0]} for ${item[1]}.`;
+  else text = `${item[0]}. ${item[1]}.`;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.85; u.pitch = 1.3;
+  window.speechSynthesis.speak(u);
+}
+
+function next(){ idx = (idx + 1) % data().length; render(); }
+function prev(){ idx = (idx - 1 + data().length) % data().length; render(); }
+
+function setMode(m){
+  mode = m; idx = 0;
+  document.getElementById("tabLetters").classList.toggle("dim", m!=="letters");
+  document.getElementById("tabNumbers").classList.toggle("dim", m!=="numbers");
+  render();
+}
+
+function toggleAuto(){
+  auto = !auto;
+  const btn = document.getElementById("tabAuto");
+  btn.classList.toggle("on", auto);
+  btn.textContent = auto ? "⏸️ Auto" : "▶️ Auto";
+  if(auto){
+    render();
+    timer = setInterval(next, 4000);
+  } else {
+    clearInterval(timer);
+  }
+}
+
+document.getElementById("tabLetters").onclick = () => setMode("letters");
+document.getElementById("tabNumbers").onclick = () => setMode("numbers");
+document.getElementById("tabAuto").onclick = toggleAuto;
+
+// keyboard support
+document.addEventListener("keydown", e => {
+  if(e.key === "ArrowRight") next();
+  if(e.key === "ArrowLeft") prev();
+  if(e.key === " ") { e.preventDefault(); speakCurrent(); }
+});
+
+render();
+</script>
+</body>
+</html>
