@@ -1,0 +1,138 @@
+:root {
+  --card: #ffffff;
+  --shadow: rgba(0,0,0,.15);
+  --ink: #4a3b6b;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; height: 100%; }
+body {
+  font-family: "Comic Sans MS", "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  background: linear-gradient(135deg, #ffe29f, #ffa99f, #ff719a, #a18cd1);
+  background-size: 400% 400%;
+  animation: bgmove 18s ease infinite;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  height: 100dvh;
+  overflow: hidden;
+  user-select: none;
+  touch-action: manipulation;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+@keyframes bgmove { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
+
+/* ---- bars ---- */
+.bars { flex: 0 0 auto; }
+.topbar, .toolbar {
+  display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+  padding: 6px 8px;
+}
+.topbar { padding-top: 10px; }
+.tab, .tool {
+  border: none; border-radius: 40px; cursor: pointer; color: #fff; font-weight: bold;
+  box-shadow: 0 3px 0 var(--shadow); transition: transform .08s; font-family: inherit;
+}
+.tab { padding: 9px 16px; font-size: 1rem; background: #ff8fb1; opacity: .65; }
+.tab.active { opacity: 1; background: #ff5277; transform: scale(1.05); }
+.tab:active, .tool:active { transform: translateY(2px); }
+.tool { padding: 7px 13px; font-size: .92rem; background: #7c6cff; }
+.tool.on { background: #2ecc71; }
+.tool.toggle { background: #ffa726; }
+.tool.toggle.on { background: #66bb6a; }
+.speed { display: flex; align-items: center; gap: 4px; color: #fff; font-size: .85rem; padding: 0 6px; }
+.speed input { width: 90px; }
+
+/* ---- stage / card ---- */
+.stage {
+  flex: 1 1 auto; display: flex; align-items: center; justify-content: center;
+  padding: 8px; min-height: 0;
+}
+.card {
+  background: var(--card); border-radius: 32px; box-shadow: 0 12px 30px var(--shadow);
+  padding: 14px 20px; text-align: center; width: min(94vw, 560px);
+  max-height: 100%; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 6px; cursor: pointer; animation: pop .35s ease; overflow: hidden;
+}
+@keyframes pop { 0%{transform:scale(.6);opacity:0} 70%{transform:scale(1.04)} 100%{transform:scale(1);opacity:1} }
+
+.big { font-size: clamp(2.6rem, 13vw, 7rem); font-weight: 900; line-height: 1; letter-spacing: 3px; }
+.lettersrow .cap { color: #ff5277; }
+.lettersrow .low { color: #3aafa9; }
+.big.num { color: #ff8f00; }
+
+.pic { width: clamp(120px, 34vw, 230px); }
+.pic.big-pic { width: clamp(140px, 42vw, 280px); }
+.pic svg { width: 100%; height: auto; display: block; animation: bounce 1.5s ease-in-out infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+.word { font-size: clamp(1.4rem, 7vw, 2.8rem); font-weight: 800; color: #6a4cff; }
+.word b { color: #ff5277; }
+.hint { font-size: 1.1rem; color: #888; }
+
+/* numbers grid */
+.numgrid { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; align-content: center;
+  max-width: 100%; }
+.numcell { width: clamp(34px, 12vw, 70px); }
+.numcell svg { width: 100%; height: auto; display: block; }
+/* shrink cells as count grows so they fit */
+.numgrid.n7, .numgrid.n8, .numgrid.n9, .numgrid.n10 .numcell { }
+.numgrid.n11 .numcell, .numgrid.n12 .numcell, .numgrid.n13 .numcell, .numgrid.n14 .numcell,
+.numgrid.n15 .numcell { width: clamp(28px, 9vw, 50px); }
+.numgrid.n16 .numcell, .numgrid.n17 .numcell, .numgrid.n18 .numcell,
+.numgrid.n19 .numcell, .numgrid.n20 .numcell { width: clamp(24px, 8vw, 44px); }
+
+/* ---- progress ---- */
+.progress { flex: 0 0 auto; display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;
+  padding: 4px 10px; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,.5); }
+.dot.on { background: #fff; transform: scale(1.4); }
+
+/* ---- nav ---- */
+.nav { flex: 0 0 auto; display: flex; gap: 16px; justify-content: center;
+  padding: 10px 10px calc(10px + env(safe-area-inset-bottom)); }
+.navbtn { border: none; width: 66px; height: 66px; border-radius: 50%; font-size: 1.8rem;
+  color: #fff; background: #7c4dff; cursor: pointer; box-shadow: 0 5px 0 var(--shadow);
+  transition: transform .08s; }
+.navbtn:active { transform: translateY(3px); }
+.navbtn.say { background: #ff7043; width: 86px; border-radius: 43px; }
+.navbtn.small { width: 54px; height: 54px; font-size: 1.4rem; }
+
+/* ---- quiz ---- */
+.quiz { gap: 16px; }
+.quizq { font-size: clamp(1.3rem, 6vw, 2.2rem); font-weight: 800; color: var(--ink); }
+.quizq b { color: #ff5277; }
+.choices { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+.choice { border: 4px solid #eee; background: #fafaff; border-radius: 22px; cursor: pointer;
+  padding: 10px; width: clamp(80px, 26vw, 130px); height: clamp(80px, 26vw, 130px);
+  display: flex; align-items: center; justify-content: center; transition: transform .08s; }
+.choice:active { transform: scale(.95); }
+.choice.right { border-color: #2ecc71; background: #e9fbef; }
+.choice.wrong { border-color: #e74c3c; animation: shake .3s; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+.qsym { font-size: clamp(2.5rem, 12vw, 4.5rem); font-weight: 900; color: #ff5277; }
+.qpic { width: 100%; } .qpic svg { width: 100%; height: auto; }
+
+/* ---- trace ---- */
+.trace { gap: 12px; }
+.traceHead { font-size: clamp(1.2rem, 5vw, 1.8rem); font-weight: 800; color: var(--ink); }
+.traceHead b { color: #ff5277; }
+#pad { background: #fcfcff; border: 3px dashed #d7d7ff; border-radius: 20px;
+  width: min(72vw, 300px); height: min(72vw, 300px); touch-action: none; }
+.traceNav { display: flex; gap: 12px; }
+
+.celebrate .big { font-size: clamp(4rem, 20vw, 9rem); }
+
+/* ---- confetti ---- */
+#confetti { position: fixed; inset: 0; pointer-events: none; z-index: 50; }
+
+@media (prefers-reduced-motion: reduce) {
+  body { animation: none; }
+  .pic svg, .card { animation: none; }
+}
+
+/* short / landscape phones */
+@media (max-height: 520px) {
+  .pic { width: clamp(80px, 20vh, 150px); }
+  .big { font-size: clamp(2rem, 9vh, 4rem); }
+  .navbtn { width: 52px; height: 52px; font-size: 1.4rem; }
+}
