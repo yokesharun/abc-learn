@@ -3,7 +3,7 @@
 A colorful, talking, interactive learning app for 3-year-olds. Pure frontend — no build step, no backend, all pictures are hand-made **SVG** so it stays crisp at any size and works fully offline.
 
 ## Features
-- **6 decks** — ABC (A–Z), 123 (1–20), Colors, Shapes, Animals, Fruits. Each card has a picture, the word, and is spoken aloud.
+- **6 decks** — ABC (A–Z), 123 (1–20), Colors, Shapes, Animals, Fruits. Each card has a picture, the word, and is spoken aloud in a clear **women's voice**.
 - **Phonics** — letters say their name *and* their sound ("A… A says ah… A for Apple").
 - **Numbers with counting** — the digit plus that many relevant SVG objects (3 = three stars), and it counts out loud.
 - **Auto pilot** — flips through the deck on its own; speed slider (🐢–🐇). Celebrates 🎉 at the end.
@@ -60,5 +60,10 @@ npx -y sharp-cli -i icon.svg -o icon-512.png resize 512 512
 npx -y sharp-cli -i icon.svg -o icon-192.png resize 192 192
 ```
 Modern browsers also accept the SVG icon directly, so the PNGs are just a fallback.
+
+## Voice
+Speech uses the browser's built-in voices and prefers a clear female voice (Samantha on
+macOS/iOS, otherwise the device's best available female English voice). It only speaks with
+voices installed on the device, so the exact sound varies by platform.
 
 > Tip: sound needs one tap/click first — browsers block audio until the user interacts.
