@@ -112,7 +112,7 @@ function speakItem() {
   const d = DECKS[state.deck];
   const item = cur();
   let text;
-  if (d.isLetters) text = `${item.sym}. ${item.sym} says ${item.sound}. ${item.sym} for ${item.word}.`;
+  if (d.isLetters) text = `${item.sym}.  ${item.sym} for ${item.word}.`;
   else if (d.isNumbers) {
     const counting = numWords.slice(0, item.count).join(", ");
     text = `${item.sym}. ${counting}. ${item.word}.`;
