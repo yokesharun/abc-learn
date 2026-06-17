@@ -78,15 +78,23 @@ export function stopMusic() {
 
 /* speech */
 let chosenVoice = null;
+// Known clear female voices, in order of preference (US English first).
+const FEMALE = [
+  "samantha", "ava", "allison", "susan", "zira", "joanna", "karen",
+  "kathy", "shelley", "sandy", "flo", "tessa", "moira", "fiona",
+  "victoria", "serena", "female", "woman",
+];
 function pickVoice() {
   const voices = speechSynthesis.getVoices();
   if (!voices.length) return null;
-  // prefer an English child / female voice if available
-  const pref = voices.find(v => /child|kid|junior/i.test(v.name) && /en/i.test(v.lang))
-    || voices.find(v => /(female|samantha|karen|tessa|fiona|moira|zira)/i.test(v.name) && /en/i.test(v.lang))
-    || voices.find(v => /^en/i.test(v.lang))
-    || voices[0];
-  return pref;
+  const en = voices.filter(v => /en/i.test(v.lang));
+  // try each preferred female name, US English first
+  for (const name of FEMALE) {
+    const m = en.find(v => v.name.toLowerCase().includes(name) && /en[-_]us/i.test(v.lang))
+      || en.find(v => v.name.toLowerCase().includes(name));
+    if (m) return m;
+  }
+  return en.find(v => /en[-_]us/i.test(v.lang)) || en[0] || voices[0];
 }
 if ("speechSynthesis" in window) {
   pickVoice();
