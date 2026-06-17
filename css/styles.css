@@ -116,9 +116,13 @@ body {
 .trace { gap: 12px; }
 .traceHead { font-size: clamp(1.2rem, 5vw, 1.8rem); font-weight: 800; color: var(--ink); }
 .traceHead b { color: #ff5277; }
+/* trace card fills the stage; canvas flexes to the leftover height, stays square */
+.trace.card { height: 100%; justify-content: center; }
+.traceHead { flex: 0 0 auto; }
 #pad { background: #fcfcff; border: 3px dashed #d7d7ff; border-radius: 20px;
-  width: min(72vw, 300px); height: min(72vw, 300px); touch-action: none; }
-.traceNav { display: flex; gap: 12px; }
+  touch-action: none; flex: 1 1 auto; min-height: 0; aspect-ratio: 1 / 1;
+  width: auto; height: auto; max-width: min(72vw, 300px); align-self: center; }
+.traceNav { display: flex; gap: 12px; flex: 0 0 auto; }
 
 .celebrate .big { font-size: clamp(4rem, 20vw, 9rem); }
 
@@ -135,4 +139,7 @@ body {
   .pic { width: clamp(80px, 20vh, 150px); }
   .big { font-size: clamp(2rem, 9vh, 4rem); }
   .navbtn { width: 52px; height: 52px; font-size: 1.4rem; }
+  .card { padding: 8px 14px; gap: 4px; }
+  .traceHead { font-size: clamp(1rem, 4vh, 1.4rem); }
+  .traceNav .navbtn.small { width: 44px; height: 44px; font-size: 1.2rem; }
 }
