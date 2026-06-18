@@ -96,6 +96,69 @@ export const fruits = [
   { sym: "Pear", word: "Pear", icon: "pear" },
 ];
 
+// Traditional / public-domain nursery rhymes (one verse each).
+export const rhymes = [
+  { sym: "Twinkle Twinkle", word: "Twinkle Twinkle Little Star", icon: "star", lines: [
+    "Twinkle, twinkle, little star,",
+    "How I wonder what you are.",
+    "Up above the world so high,",
+    "Like a diamond in the sky.",
+    "Twinkle, twinkle, little star,",
+    "How I wonder what you are.",
+  ]},
+  { sym: "Baa Baa", word: "Baa Baa Black Sheep", icon: "sheep", lines: [
+    "Baa, baa, black sheep,",
+    "Have you any wool?",
+    "Yes sir, yes sir,",
+    "Three bags full.",
+    "One for the master,",
+    "And one for the dame,",
+    "And one for the little boy",
+    "Who lives down the lane.",
+  ]},
+  { sym: "Humpty Dumpty", word: "Humpty Dumpty", icon: "egg", lines: [
+    "Humpty Dumpty sat on a wall,",
+    "Humpty Dumpty had a great fall.",
+    "All the king's horses and all the king's men,",
+    "Couldn't put Humpty together again.",
+  ]},
+  { sym: "Jack and Jill", word: "Jack and Jill", icon: "hill", lines: [
+    "Jack and Jill went up the hill,",
+    "To fetch a pail of water.",
+    "Jack fell down and broke his crown,",
+    "And Jill came tumbling after.",
+  ]},
+  { sym: "Hickory Dickory", word: "Hickory Dickory Dock", icon: "clock", lines: [
+    "Hickory, dickory, dock,",
+    "The mouse ran up the clock.",
+    "The clock struck one,",
+    "The mouse ran down,",
+    "Hickory, dickory, dock.",
+  ]},
+  { sym: "Itsy Bitsy Spider", word: "Itsy Bitsy Spider", icon: "spider", lines: [
+    "The itsy bitsy spider",
+    "Climbed up the water spout.",
+    "Down came the rain",
+    "And washed the spider out.",
+    "Out came the sun",
+    "And dried up all the rain,",
+    "And the itsy bitsy spider",
+    "Climbed up the spout again.",
+  ]},
+  { sym: "Row Your Boat", word: "Row Row Row Your Boat", icon: "boat", lines: [
+    "Row, row, row your boat,",
+    "Gently down the stream.",
+    "Merrily, merrily, merrily, merrily,",
+    "Life is but a dream.",
+  ]},
+  { sym: "Mary Had a Lamb", word: "Mary Had a Little Lamb", icon: "lamb", lines: [
+    "Mary had a little lamb,",
+    "Its fleece was white as snow.",
+    "And everywhere that Mary went,",
+    "The lamb was sure to go.",
+  ]},
+];
+
 export const DECKS = {
   letters: { data: letters, label: "ABC", emoji: "🔤", isLetters: true },
   numbers: { data: numbers, label: "123", emoji: "🔢", isNumbers: true },
@@ -103,4 +166,5 @@ export const DECKS = {
   shapes:  { data: shapes,  label: "Shapes", emoji: "🔷" },
   animals: { data: animals, label: "Animals", emoji: "🐾" },
   fruits:  { data: fruits,  label: "Fruits", emoji: "🍓" },
+  rhymes:  { data: rhymes,  label: "Rhymes", emoji: "📖", isRhymes: true },
 };

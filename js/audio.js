@@ -118,6 +118,28 @@ export function speak(text) {
   setTimeout(() => speechSynthesis.speak(u), 0);
 }
 
+/* Speak an array of lines in order, calling onEach(index) as each starts and
+   onDone() at the end. Chains via onend; cancellable by calling speechSynthesis.cancel(). */
+export function speakSeq(lines, onEach, onDone) {
+  if (!("speechSynthesis" in window)) { onDone && onDone(); return; }
+  try { speechSynthesis.resume(); } catch {}
+  speechSynthesis.cancel();
+  if (!chosenVoice) chosenVoice = pickVoice();
+  let i = 0;
+  const sayNext = () => {
+    if (i >= lines.length) { onDone && onDone(); return; }
+    const idx = i;
+    const u = new SpeechSynthesisUtterance(lines[idx]);
+    if (chosenVoice) u.voice = chosenVoice;
+    u.rate = 0.82; u.pitch = 1.3; u.volume = 1;
+    u.onstart = () => onEach && onEach(idx);
+    u.onend = () => { i++; sayNext(); };
+    u.onerror = () => { i++; sayNext(); };
+    speechSynthesis.speak(u);
+  };
+  setTimeout(sayNext, 0);
+}
+
 /* Must be called from inside a real user gesture (touchend/click).
    Unlocks Web Audio with a silent buffer and primes SpeechSynthesis on iOS. */
 export function unlock() {

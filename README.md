@@ -3,7 +3,9 @@
 A colorful, talking, interactive learning app for 3-year-olds. Pure frontend — no build step, no backend, all pictures are hand-made **SVG** so it stays crisp at any size and works fully offline.
 
 ## Features
-- **6 decks** — ABC (A–Z), 123 (1–20), Colors, Shapes, Animals, Fruits. Each card has a picture, the word, and is spoken aloud in a clear **women's voice**.
+- **7 decks** — ABC (A–Z), 123 (1–20), Colors, Shapes, Animals, Fruits, and **Rhymes**. Each card has a picture, the word, and is spoken aloud in a clear **women's voice**.
+- **Nursery rhymes** — 8 traditional/public-domain rhymes (Twinkle Twinkle, Baa Baa Black Sheep, Humpty Dumpty, Jack and Jill, Hickory Dickory Dock, Itsy Bitsy Spider, Row Your Boat, Mary Had a Little Lamb) with a picture; recited **line-by-line with the active line highlighted** and gentle music.
+- **Memory match game** — flip cards to find matching pairs from any deck; pair count adapts to screen size and it celebrates when the board is cleared.
 - **Phonics** — letters say their name *and* their sound ("A… A says ah… A for Apple").
 - **Numbers with counting** — the digit plus that many relevant SVG objects (3 = three stars), and it counts out loud.
 - **Auto pilot** — flips through the deck on its own; speed slider (🐢–🐇). Celebrates 🎉 at the end.

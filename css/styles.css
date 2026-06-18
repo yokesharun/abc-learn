@@ -124,6 +124,33 @@ body {
   width: auto; height: auto; max-width: min(72vw, 300px); align-self: center; }
 .traceNav { display: flex; gap: 12px; flex: 0 0 auto; }
 
+/* ---- rhymes ---- */
+.rhyme.card { height: 100%; justify-content: flex-start; gap: 8px; padding-top: 16px; }
+.rhymeTitle { font-size: clamp(1.3rem, 5.5vw, 2.1rem); font-weight: 900; color: #ff5277; flex: 0 0 auto; }
+.pic.rhymePic { width: clamp(90px, 24vw, 150px); flex: 0 0 auto; }
+.lyrics { display: flex; flex-direction: column; gap: 4px; overflow-y: auto; min-height: 0;
+  flex: 1 1 auto; width: 100%; padding: 4px 6px; }
+.lyric { font-size: clamp(1.05rem, 4.6vw, 1.6rem); font-weight: 700; color: #8a7fb0;
+  line-height: 1.3; border-radius: 10px; padding: 2px 6px; transition: all .2s; }
+.lyric.on { color: #fff; background: #7c6cff; transform: scale(1.04); }
+
+/* ---- memory match ---- */
+.memory.card { height: 100%; justify-content: flex-start; gap: 10px; padding-top: 16px; }
+.memHead { font-size: clamp(1.1rem, 5vw, 1.8rem); font-weight: 800; color: var(--ink); flex: 0 0 auto; }
+.mgrid { display: grid; grid-template-columns: repeat(var(--cols), 1fr); gap: clamp(6px, 2vw, 12px);
+  width: 100%; align-content: center; flex: 1 1 auto; min-height: 0; }
+.mcard { position: relative; aspect-ratio: 1 / 1; border: none; border-radius: 16px; cursor: pointer;
+  background: transparent; padding: 0; }
+.mback, .mfront { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  border-radius: 16px; backface-visibility: hidden; transition: transform .25s; }
+.mback { background: #7c6cff; font-size: clamp(1.5rem, 7vw, 2.5rem); transform: rotateY(0); }
+.mfront { background: #fafaff; border: 3px solid #eee; transform: rotateY(180deg); padding: 8px; }
+.mcard.up .mback { transform: rotateY(180deg); }
+.mcard.up .mfront { transform: rotateY(0); }
+.mcard.done .mfront { border-color: #2ecc71; background: #e9fbef; }
+.msym { font-size: clamp(1.6rem, 8vw, 3rem); font-weight: 900; color: #ff5277; }
+.mpic { width: 86%; } .mpic svg { width: 100%; height: auto; }
+
 .celebrate .big { font-size: clamp(4rem, 20vw, 9rem); }
 
 /* ---- confetti ---- */

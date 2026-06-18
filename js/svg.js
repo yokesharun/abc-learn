@@ -221,6 +221,54 @@ export const ICONS = {
 
   // a plain colored blob for colors mode
   blob: (color) => W(`<circle cx="50" cy="50" r="36" fill="${color}" stroke="rgba(0,0,0,.12)" stroke-width="3"/><ellipse cx="40" cy="38" rx="12" ry="8" fill="#fff" opacity=".35"/>`),
+
+  // ---- rhyme illustrations ----
+  sheep: () => W(`
+    <g fill="#f4f4f4"><circle cx="40" cy="50" r="14"/><circle cx="58" cy="46" r="14"/><circle cx="64" cy="60" r="13"/><circle cx="46" cy="64" r="14"/><circle cx="56" cy="58" r="14"/></g>
+    <ellipse cx="32" cy="50" rx="12" ry="13" fill="#2c2c2c"/>
+    <circle cx="28" cy="47" r="3" fill="#fff"/><circle cx="36" cy="47" r="3" fill="#fff"/>
+    <rect x="40" y="74" width="4" height="12" fill="#2c2c2c"/><rect x="58" y="74" width="4" height="12" fill="#2c2c2c"/>`),
+
+  egg: () => W(`
+    <rect x="14" y="64" width="72" height="24" fill="#c98b5a"/>
+    <g stroke="#a9743f" stroke-width="2"><path d="M14 76h72M38 64v12M62 64v12M26 76v12M50 76v12M74 76v12"/></g>
+    <ellipse cx="50" cy="40" rx="22" ry="26" fill="#fff8e7"/>
+    <circle cx="42" cy="38" r="3.5" fill="#2c2c2c"/><circle cx="58" cy="38" r="3.5" fill="#2c2c2c"/>
+    <path d="M43 50q7 6 14 0" stroke="#e07a5f" stroke-width="3" fill="none"/>
+    <path d="M40 22l4 8 6-8 6 8 4-8" stroke="#e07a5f" stroke-width="3" fill="none"/>`),
+
+  hill: () => W(`
+    <path d="M0 88q50-56 100 0z" fill="#7ec850"/>
+    <circle cx="74" cy="26" r="13" fill="#ffd400"/>
+    <circle cx="36" cy="58" r="6" fill="#ffe0bd"/><circle cx="52" cy="50" r="6" fill="#ffe0bd"/>
+    <rect x="40" y="70" width="6" height="4" fill="#5d9cec"/>
+    <path d="M28 30q8 4 16 0" stroke="#fff" stroke-width="4" fill="none" opacity=".8"/>`),
+
+  clock: () => W(`
+    <rect x="34" y="20" width="32" height="60" rx="6" fill="#a0703f"/>
+    <circle cx="50" cy="36" r="13" fill="#fff8e7" stroke="#7b4b2a" stroke-width="3"/>
+    <path d="M50 36v-8M50 36l6 4" stroke="#2c2c2c" stroke-width="2.5"/>
+    <ellipse cx="72" cy="64" rx="8" ry="6" fill="#9a9a9a"/>
+    <circle cx="68" cy="62" r="2" fill="#2c2c2c"/><path d="M80 64l8 4" stroke="#9a9a9a" stroke-width="3"/>`),
+
+  spider: () => W(`
+    <g stroke="#3a2a2a" stroke-width="4" fill="none">
+    <path d="M40 50L20 38M40 56L18 56M40 62L22 74M60 50L80 38M60 56L82 56M60 62L78 74"/></g>
+    <circle cx="50" cy="56" r="16" fill="#3a2a2a"/><circle cx="50" cy="40" r="9" fill="#3a2a2a"/>
+    <circle cx="46" cy="38" r="2.5" fill="#fff"/><circle cx="54" cy="38" r="2.5" fill="#fff"/>`),
+
+  boat: () => W(`
+    <path d="M18 60h64l-10 22H28z" fill="#e74c3c"/>
+    <rect x="48" y="22" width="4" height="40" fill="#7b4b2a"/>
+    <path d="M52 26l22 28H52z" fill="#fff"/>
+    <path d="M0 84q12-8 25 0t25 0 25 0 25 0" stroke="#5d9cec" stroke-width="5" fill="none"/>`),
+
+  lamb: () => W(`
+    <ellipse cx="52" cy="56" rx="22" ry="18" fill="#fafafa"/>
+    <g fill="#fff"><circle cx="38" cy="48" r="8"/><circle cx="52" cy="44" r="8"/><circle cx="66" cy="50" r="8"/></g>
+    <ellipse cx="30" cy="54" rx="10" ry="11" fill="#ffe0d0"/>
+    <circle cx="27" cy="52" r="2.5" fill="#2c2c2c"/><circle cx="34" cy="52" r="2.5" fill="#2c2c2c"/>
+    <rect x="46" y="72" width="4" height="12" fill="#d8b" /><rect x="60" y="72" width="4" height="12" fill="#d8b"/>`),
 };
 
 export function icon(name, arg) {

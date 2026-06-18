@@ -88,18 +88,48 @@ function render() {
       <div class="big num">${item.sym}</div>
       <div class="numgrid n${item.count}">${cells}</div>
       <div class="word">${item.word}</div>`;
+  } else if (d.isRhymes) {
+    const lyrics = item.lines.map((l, i) =>
+      `<span class="lyric" data-line="${i}">${l}</span>`).join("");
+    html = `
+      <div class="rhymeTitle">${item.word}</div>
+      <div class="pic rhymePic">${icon(item.icon, item.iconArg)}</div>
+      <div class="lyrics">${lyrics}</div>`;
   } else {
     html = `
       <div class="pic big-pic">${icon(item.icon, item.iconArg)}</div>
       <div class="word">${item.word}</div>`;
   }
 
-  card.className = "card";
+  card.className = d.isRhymes ? "card rhyme" : "card";
   card.innerHTML = html;
-  card.onclick = () => { A.pop(); confettiBurst(); speakItem(); };
   bump(card);
   renderProgress();
-  speakItem();
+
+  if (d.isRhymes) {
+    card.onclick = () => playRhyme();
+    playRhyme();
+  } else {
+    card.onclick = () => { A.pop(); confettiBurst(); speakItem(); };
+    speakItem();
+  }
+}
+
+/* recite the current rhyme line-by-line, highlighting each line */
+function playRhyme() {
+  const item = cur();
+  const spans = [...card.querySelectorAll(".lyric")];
+  spans.forEach(s => s.classList.remove("on"));
+  if (A.settings.music) A.startMusic();
+  A.speakSeq(
+    item.lines,
+    (idx) => {
+      spans.forEach(s => s.classList.remove("on"));
+      const el = spans[idx];
+      if (el) { el.classList.add("on"); el.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+    },
+    () => spans.forEach(s => s.classList.remove("on")),
+  );
 }
 
 function renderProgress() {
@@ -327,6 +357,64 @@ function startSong() {
   if (!state.auto) startAuto();
 }
 
+/* ---------- memory match game ---------- */
+function startMemory() {
+  stopAuto();
+  state.game = "memory";
+  if (DECKS[state.deck].isRhymes) { state.deck = "animals"; state.idx = 0; save(); syncTabs(); }
+  buildMemory();
+}
+function buildMemory() {
+  const deck = DECKS[state.deck];
+  const data = deck.data;
+  // pair count adapts to viewport
+  const pairs = innerWidth < 480 ? 3 : innerWidth < 900 ? 4 : 6;
+  const picks = [...data].sort(() => Math.random() - 0.5).slice(0, Math.min(pairs, data.length));
+  let cards = picks.flatMap((it, i) => [{ id: i, it }, { id: i, it }]);
+  cards = cards.sort(() => Math.random() - 0.5);
+
+  const face = (it) => deck.isLetters
+    ? `<span class="msym">${it.sym}</span>`
+    : `<span class="mpic">${icon(it.icon, it.iconArg)}</span>`;
+
+  card.className = "card memory";
+  card.onclick = null;
+  card.innerHTML = `
+    <div class="memHead">Find the matching pairs! 🧩</div>
+    <div class="mgrid" style="--cols:${cards.length <= 6 ? 3 : cards.length <= 8 ? 4 : 4}">
+      ${cards.map((c, idx) =>
+        `<button class="mcard" data-idx="${idx}" data-id="${c.id}" aria-label="card">
+           <span class="mback">❓</span>
+           <span class="mfront">${face(c.it)}</span>
+         </button>`).join("")}
+    </div>`;
+  bump(card);
+  A.speak("Find the matching pairs!");
+
+  let first = null, lock = false, matched = 0;
+  const total = cards.length;
+  card.querySelectorAll(".mcard").forEach(btn => {
+    btn.onclick = () => {
+      if (lock || btn.classList.contains("up") || btn.classList.contains("done")) return;
+      btn.classList.add("up");
+      const it = cards[+btn.dataset.idx].it;
+      A.pop();
+      if (!first) { first = btn; return; }
+      // second pick
+      if (first.dataset.id === btn.dataset.id) {
+        first.classList.add("done"); btn.classList.add("done");
+        A.correct(); A.speak(it.word || it.sym);
+        matched += 2; first = null;
+        if (matched === total) { confettiBurst(true); setTimeout(celebrate, 700); }
+      } else {
+        lock = true; A.wrong();
+        const a = first, b = btn; first = null;
+        setTimeout(() => { a.classList.remove("up"); b.classList.remove("up"); lock = false; }, 800);
+      }
+    };
+  });
+}
+
 /* ---------- swipe ---------- */
 let sx = 0, sy = 0;
 stage.addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
@@ -351,9 +439,15 @@ function wire() {
   $("#quizBtn").onclick = startQuiz;
   $("#traceBtn").onclick = startTrace;
   $("#songBtn").onclick = startSong;
+  $("#matchBtn").onclick = startMemory;
   $("#prevBtn").onclick = () => { stopAuto(); state.game === "flash" ? prev() : render(); };
   $("#nextBtn").onclick = () => { stopAuto(); state.game === "flash" ? next() : render(); };
-  $("#sayBtn").onclick = () => { A.unlock(); if (state.game === "flash") { confettiBurst(); speakItem(); } };
+  $("#sayBtn").onclick = () => {
+    A.unlock();
+    if (state.game !== "flash") return;
+    if (DECKS[state.deck].isRhymes) playRhyme();
+    else { confettiBurst(); speakItem(); }
+  };
 
   $("#caseBtn").onclick = () => {
     state.letterCase = state.letterCase === "both" ? "cap" : state.letterCase === "cap" ? "low" : "both";
