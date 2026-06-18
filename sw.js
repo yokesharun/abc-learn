@@ -1,5 +1,5 @@
 /* Simple offline cache for the kids app. Bump CACHE to invalidate. */
-const CACHE = "abc123-v6";
+const CACHE = "abc123-v7";
 const ASSETS = [
   "./",
   "./index.html",

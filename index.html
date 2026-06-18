@@ -12,23 +12,12 @@
 <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <header class="bars">
-    <nav class="topbar" id="deckBar" aria-label="Categories"></nav>
-    <div class="toolbar">
-      <button class="tool" id="autoBtn">▶️ Auto</button>
-      <button class="tool" id="quizBtn">❓ Quiz</button>
-      <button class="tool" id="traceBtn">✏️ Trace</button>
-      <button class="tool" id="matchBtn">🧩 Match</button>
-      <button class="tool" id="songBtn">🎶 Song</button>
-      <button class="tool toggle" id="caseBtn" aria-label="Letter case">Aa</button>
-      <button class="tool toggle" id="soundBtn">🔊 Sound</button>
-      <button class="tool toggle" id="musicBtn">🎵 Music</button>
-      <button class="tool toggle" id="fsBtn" aria-label="Fullscreen">⛶</button>
-      <label class="speed" aria-label="Auto speed">🐢
-        <input type="range" id="speed" min="3000" max="8000" step="1000" value="5000" />
-      🐇</label>
-    </div>
+  <header class="appbar">
+    <span class="logo">📖 ABC&nbsp;123</span>
+    <button class="iconbtn" id="fsBtn" aria-label="Fullscreen">⛶</button>
   </header>
+
+  <nav class="deckstrip" id="deckBar" aria-label="Categories"></nav>
 
   <main class="stage" id="stage">
     <div class="card" id="card"></div>
@@ -41,6 +30,41 @@
     <button class="navbtn say" id="sayBtn" aria-label="Say it">🔊</button>
     <button class="navbtn" id="nextBtn" aria-label="Next">➡️</button>
   </nav>
+
+  <nav class="tabbar" aria-label="Main menu">
+    <button class="tab-item active" id="tabLearn"><span class="ti-ico">🏠</span><span class="ti-lbl">Learn</span></button>
+    <button class="tab-item" id="tabPlay"><span class="ti-ico">🎮</span><span class="ti-lbl">Play</span></button>
+    <button class="tab-item" id="tabSettings"><span class="ti-ico">⚙️</span><span class="ti-lbl">Settings</span></button>
+  </nav>
+
+  <!-- bottom sheets -->
+  <div class="scrim" id="scrim" hidden></div>
+
+  <section class="sheet" id="playSheet" aria-label="Games" hidden>
+    <div class="sheet-handle"></div>
+    <h2 class="sheet-title">🎮 Play a game</h2>
+    <div class="sheet-grid">
+      <button class="bigbtn" id="autoBtn"><span class="bi">▶️</span><span>Auto</span></button>
+      <button class="bigbtn" id="quizBtn">❓<span>Quiz</span></button>
+      <button class="bigbtn" id="traceBtn">✏️<span>Trace</span></button>
+      <button class="bigbtn" id="matchBtn">🧩<span>Match</span></button>
+      <button class="bigbtn" id="songBtn">🎶<span>Song</span></button>
+    </div>
+  </section>
+
+  <section class="sheet" id="settingsSheet" aria-label="Settings" hidden>
+    <div class="sheet-handle"></div>
+    <h2 class="sheet-title">⚙️ Settings</h2>
+    <div class="sheet-grid">
+      <button class="bigbtn toggle" id="soundBtn"><span class="bi">🔊</span><span>Sound</span></button>
+      <button class="bigbtn toggle" id="musicBtn"><span class="bi">🎵</span><span>Music</span></button>
+      <button class="bigbtn toggle" id="caseBtn" aria-label="Letter case"><span class="bi">Aa</span><span>Case</span></button>
+      <button class="bigbtn toggle" id="fsBtn2" aria-label="Fullscreen"><span class="bi">⛶</span><span>Full</span></button>
+    </div>
+    <label class="speedrow" aria-label="Auto speed">🐢
+      <input type="range" id="speed" min="3000" max="8000" step="1000" value="5000" />
+    🐇</label>
+  </section>
 
   <canvas id="confetti" aria-hidden="true"></canvas>
 

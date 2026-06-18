@@ -177,15 +177,15 @@ function setDeck(key) {
 /* ---------- auto pilot ---------- */
 function startAuto() {
   state.auto = true;
-  $("#autoBtn").classList.add("on");
-  $("#autoBtn").textContent = "⏸️ Stop";
+  const b = $("#autoBtn");
+  b.classList.add("on"); b.querySelector(".bi").textContent = "⏸️";
   if (state.game !== "flash") render();
   autoTimer = setInterval(next, state.speed);
 }
 function stopAuto() {
   state.auto = false;
   const b = $("#autoBtn");
-  if (b) { b.classList.remove("on"); b.textContent = "▶️ Auto"; }
+  if (b) { b.classList.remove("on"); b.querySelector(".bi").textContent = "▶️"; }
   clearInterval(autoTimer);
 }
 function toggleAuto() { state.auto ? stopAuto() : startAuto(); }
@@ -427,19 +427,51 @@ stage.addEventListener("touchend", e => {
 /* ---------- toggles / controls ---------- */
 function syncToggles() {
   $("#soundBtn").classList.toggle("on", A.settings.sound);
-  $("#soundBtn").textContent = A.settings.sound ? "🔊 Sound" : "🔇 Sound";
+  $("#soundBtn").querySelector(".bi").textContent = A.settings.sound ? "🔊" : "🔇";
   $("#musicBtn").classList.toggle("on", A.settings.music);
-  $("#musicBtn").textContent = A.settings.music ? "🎵 Music" : "🎵 Music";
-  $("#caseBtn").textContent = state.letterCase === "both" ? "Aa" : state.letterCase === "cap" ? "A" : "a";
+  $("#caseBtn").querySelector(".bi").textContent =
+    state.letterCase === "both" ? "Aa" : state.letterCase === "cap" ? "A" : "a";
   $("#speed").value = String(state.speed);
 }
 
+/* ---------- bottom sheets + tab bar ---------- */
+function openSheet(id) {
+  closeSheet();
+  $("#" + id).hidden = false;
+  $("#scrim").hidden = false;
+  // allow display:none -> animation
+  requestAnimationFrame(() => { $("#" + id).classList.add("open"); $("#scrim").classList.add("open"); });
+}
+function closeSheet() {
+  $("#scrim").classList.remove("open");
+  ["playSheet", "settingsSheet"].forEach(id => {
+    const el = $("#" + id);
+    if (el.classList.contains("open")) {
+      el.classList.remove("open");
+      setTimeout(() => { el.hidden = true; }, 300);
+    }
+  });
+  setTimeout(() => { $("#scrim").hidden = true; }, 300);
+}
+function setTab(which) {
+  document.querySelectorAll(".tab-item").forEach(t => t.classList.remove("active"));
+  $("#tab" + which).classList.add("active");
+}
+
 function wire() {
-  $("#autoBtn").onclick = toggleAuto;
-  $("#quizBtn").onclick = startQuiz;
-  $("#traceBtn").onclick = startTrace;
-  $("#songBtn").onclick = startSong;
-  $("#matchBtn").onclick = startMemory;
+  // game buttons close the Play sheet after starting
+  const game = (fn) => () => { fn(); closeSheet(); setTab("Learn"); };
+  $("#autoBtn").onclick = game(toggleAuto);
+  $("#quizBtn").onclick = game(startQuiz);
+  $("#traceBtn").onclick = game(startTrace);
+  $("#songBtn").onclick = game(startSong);
+  $("#matchBtn").onclick = game(startMemory);
+
+  // bottom tab bar
+  $("#tabLearn").onclick = () => { closeSheet(); setTab("Learn"); if (state.game !== "flash") render(); };
+  $("#tabPlay").onclick = () => { setTab("Play"); openSheet("playSheet"); };
+  $("#tabSettings").onclick = () => { setTab("Settings"); openSheet("settingsSheet"); };
+  $("#scrim").onclick = () => { closeSheet(); setTab("Learn"); };
   $("#prevBtn").onclick = () => { stopAuto(); state.game === "flash" ? prev() : render(); };
   $("#nextBtn").onclick = () => { stopAuto(); state.game === "flash" ? next() : render(); };
   $("#sayBtn").onclick = () => {
@@ -462,10 +494,12 @@ function wire() {
     state.speed = +e.target.value; save();
     if (state.auto) { clearInterval(autoTimer); autoTimer = setInterval(next, state.speed); }
   };
-  $("#fsBtn").onclick = () => {
+  const toggleFs = () => {
     if (document.fullscreenElement) document.exitFullscreen();
     else document.documentElement.requestFullscreen?.();
   };
+  $("#fsBtn").onclick = toggleFs;
+  $("#fsBtn2").onclick = toggleFs;
 
   addEventListener("keydown", e => {
     if (state.game !== "flash") return;
