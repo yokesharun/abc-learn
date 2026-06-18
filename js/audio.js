@@ -2,6 +2,7 @@
    No binary assets. Plus speech via SpeechSynthesis with a child-friendly voice. */
 
 let ctx = null;
+let unlocked = false;
 const ensure = () => {
   if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
   if (ctx.state === "suspended") ctx.resume();
@@ -104,6 +105,8 @@ if ("speechSynthesis" in window) {
 
 export function speak(text) {
   if (!("speechSynthesis" in window)) return;
+  // iOS Safari needs the synth resumed and only speaks reliably after a gesture.
+  try { speechSynthesis.resume(); } catch {}
   speechSynthesis.cancel();
   if (!chosenVoice) chosenVoice = pickVoice();
   const u = new SpeechSynthesisUtterance(text);
@@ -111,7 +114,31 @@ export function speak(text) {
   u.rate = 0.85;
   u.pitch = 1.35;
   u.volume = 1;
-  speechSynthesis.speak(u);
+  // small defer: cancel()+speak() back-to-back is flaky on iOS
+  setTimeout(() => speechSynthesis.speak(u), 0);
 }
 
-export function unlock() { ensure(); }
+/* Must be called from inside a real user gesture (touchend/click).
+   Unlocks Web Audio with a silent buffer and primes SpeechSynthesis on iOS. */
+export function unlock() {
+  const c = ensure();
+  if (unlocked) return;
+  try {
+    // play a one-sample silent buffer to wake iOS audio
+    const buf = c.createBuffer(1, 1, 22050);
+    const src = c.createBufferSource();
+    src.buffer = buf;
+    src.connect(c.destination);
+    src.start(0);
+  } catch {}
+  if ("speechSynthesis" in window) {
+    try {
+      speechSynthesis.resume();
+      // an empty utterance primes the engine without making noise
+      const prime = new SpeechSynthesisUtterance(" ");
+      prime.volume = 0;
+      speechSynthesis.speak(prime);
+    } catch {}
+  }
+  unlocked = true;
+}

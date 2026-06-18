@@ -379,8 +379,14 @@ function wire() {
     if (e.key === "ArrowLeft") { stopAuto(); prev(); }
     if (e.key === " ") { e.preventDefault(); speakItem(); }
   });
-  // first user gesture unlocks audio
-  addEventListener("pointerdown", () => A.unlock(), { once: true });
+  // unlock audio on the first real user gesture (iOS needs touchend + a primed synth)
+  const unlockOnce = () => {
+    A.unlock();
+    ["touchend", "pointerdown", "click", "keydown"].forEach(ev =>
+      removeEventListener(ev, unlockOnce));
+  };
+  ["touchend", "pointerdown", "click", "keydown"].forEach(ev =>
+    addEventListener(ev, unlockOnce, { passive: true }));
 }
 
 /* ---------- PWA ---------- */
