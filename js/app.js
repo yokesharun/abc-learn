@@ -295,56 +295,76 @@ function startTrace() {
 }
 function drawTrace() {
   const item = cur();
+  const cap = item.sym, low = item.sym.toLowerCase();
   card.className = "card trace";
   card.onclick = null;
   card.innerHTML = `
-    <div class="traceHead">Trace the letter <b>${item.sym}</b></div>
-    <canvas id="pad" width="300" height="300" aria-label="tracing area"></canvas>
+    <div class="traceHead">Trace <b>${cap}</b> and <b>${low}</b></div>
+    <div class="tracePads">
+      <div class="tracePad"><canvas id="padCap" width="300" height="300" aria-label="trace capital ${cap}"></canvas><span class="plabel">${cap}</span></div>
+      <div class="tracePad"><canvas id="padLow" width="300" height="300" aria-label="trace small ${low}"></canvas><span class="plabel">${low}</span></div>
+    </div>
     <div class="traceNav">
       <button id="tPrev" class="navbtn small" aria-label="previous">⬅️</button>
       <button id="tClear" class="navbtn small" aria-label="clear">🧽</button>
       <button id="tNext" class="navbtn small" aria-label="next">➡️</button>
     </div>`;
   bump(card);
-  A.speak(`Trace the letter ${item.sym}. ${item.sym} says ${item.sound}.`);
+  A.speak(`Trace capital ${cap} and small ${low}. ${cap} says ${item.sound}.`);
 
-  const pad = $("#pad");
-  const p = pad.getContext("2d");
-  function guide() {
-    p.clearRect(0, 0, 300, 300);
-    p.save();
-    p.font = "bold 230px 'Comic Sans MS', sans-serif";
-    p.textAlign = "center"; p.textBaseline = "middle";
-    p.setLineDash([10, 12]);
-    p.lineWidth = 3; p.strokeStyle = "#c9c9ff";
-    p.strokeText(item.sym, 150, 160);
-    p.restore();
+  const done = { cap: false, low: false };
+  const bothDone = () => {
+    if (done.cap && done.low) { confettiBurst(true); A.speak(`You traced capital ${cap} and small ${low}!`); }
+  };
+
+  // set up one pad: dotted guide glyph + finger/mouse drawing + success
+  function setupPad(canvasId, glyph, key, spokenName) {
+    const pad = $("#" + canvasId);
+    const p = pad.getContext("2d");
+    const guide = () => {
+      p.clearRect(0, 0, 300, 300);
+      p.save();
+      p.font = "bold 230px 'Comic Sans MS', sans-serif";
+      p.textAlign = "center"; p.textBaseline = "middle";
+      p.setLineDash([10, 12]);
+      p.lineWidth = 3; p.strokeStyle = "#c9c9ff";
+      p.strokeText(glyph, 150, 160);
+      p.restore();
+    };
+    guide();
+    let drawing = false, painted = 0;
+    const pos = (e) => {
+      const r = pad.getBoundingClientRect();
+      const t = e.touches ? e.touches[0] : e;
+      return { x: (t.clientX - r.left) * (300 / r.width), y: (t.clientY - r.top) * (300 / r.height) };
+    };
+    const start = (e) => { drawing = true; const { x, y } = pos(e); p.beginPath(); p.moveTo(x, y); e.preventDefault(); };
+    const move = (e) => {
+      if (!drawing) return;
+      const { x, y } = pos(e);
+      p.lineWidth = 16; p.lineCap = "round"; p.strokeStyle = "#ff5277";
+      p.lineTo(x, y); p.stroke(); p.beginPath(); p.moveTo(x, y);
+      painted++;
+      if (painted === 40 && !done[key]) {
+        done[key] = true;
+        A.chime(); confettiBurst(); A.speak(`Great! ${spokenName}.`);
+        bothDone();
+      }
+      e.preventDefault();
+    };
+    const end = () => { drawing = false; };
+    pad.addEventListener("mousedown", start); pad.addEventListener("mousemove", move);
+    addEventListener("mouseup", end);
+    pad.addEventListener("touchstart", start, { passive: false });
+    pad.addEventListener("touchmove", move, { passive: false });
+    pad.addEventListener("touchend", end);
+    return () => { painted = 0; done[key] = false; guide(); };
   }
-  guide();
-  let drawing = false, painted = 0;
-  const pos = (e) => {
-    const r = pad.getBoundingClientRect();
-    const t = e.touches ? e.touches[0] : e;
-    return { x: (t.clientX - r.left) * (300 / r.width), y: (t.clientY - r.top) * (300 / r.height) };
-  };
-  const start = (e) => { drawing = true; const { x, y } = pos(e); p.beginPath(); p.moveTo(x, y); e.preventDefault(); };
-  const move = (e) => {
-    if (!drawing) return;
-    const { x, y } = pos(e);
-    p.lineWidth = 16; p.lineCap = "round"; p.strokeStyle = "#ff5277";
-    p.lineTo(x, y); p.stroke(); p.beginPath(); p.moveTo(x, y);
-    painted++;
-    if (painted === 40) { A.chime(); confettiBurst(); A.speak(`Great job! That is ${item.sym}.`); }
-    e.preventDefault();
-  };
-  const end = () => { drawing = false; };
-  pad.addEventListener("mousedown", start); pad.addEventListener("mousemove", move);
-  addEventListener("mouseup", end);
-  pad.addEventListener("touchstart", start, { passive: false });
-  pad.addEventListener("touchmove", move, { passive: false });
-  pad.addEventListener("touchend", end);
 
-  $("#tClear").onclick = () => { painted = 0; guide(); };
+  const clearCap = setupPad("padCap", cap, "cap", `Capital ${cap}`);
+  const clearLow = setupPad("padLow", low, "low", `small ${low}`);
+
+  $("#tClear").onclick = () => { clearCap(); clearLow(); };
   $("#tNext").onclick = () => { next(); drawTrace(); };
   $("#tPrev").onclick = () => { prev(); drawTrace(); };
 }

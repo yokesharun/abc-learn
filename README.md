@@ -11,7 +11,7 @@ A colorful, talking, interactive learning app for 3-year-olds. Pure frontend —
 - **Numbers with counting** — the digit plus that many relevant SVG objects (3 = three stars), and it counts out loud.
 - **Auto pilot** — flips through the deck on its own; speed slider (🐢–🐇). Celebrates 🎉 at the end.
 - **Quiz game** — "Find the B!" with three picture/letter choices, cheers on correct, gentle retry on wrong.
-- **Tracing** — trace the letter with a finger on a dotted guide.
+- **Tracing** — trace both the **capital and small** letter (A–Z) on side-by-side dotted guides; each celebrates when traced, prev/next step through the alphabet.
 - **Song mode** — alphabet auto-plays with gentle background music.
 - **Tap to play** — tap the picture for a pop, confetti, and to hear it again.
 - **Capital / small** toggle for focused letter practice (Aa → A → a).
